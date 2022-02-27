@@ -1,5 +1,6 @@
 const APP_PREFIX = 'SmartMoney-';
 const VERSION = 'version_01';
+const DATA_CACHE_NAME = 'data-cache-v1';
 const CACHE_NAME = APP_PREFIX + VERSION;
 const FILES_TO_CACHE = [
     "./index.html",
@@ -49,16 +50,35 @@ self.addEventListener('activate', function (e) {
 });
 
 self.addEventListener('fetch', function (e) {
-    console.log('fetch request : ' + e.request.url)
-    e.respondWith(
-        caches.match(e.request).then(function (request) {
-            if (request) {
-                console.log('respond with cache : ' + e.request.url)
-                return request 
-            } else {
-                console.log('file is not cached, fetching : ' + e.request.url)
+    if (e.request.url.includes('/api/')) {
+        e.respondWith(
+            caches.open(DATA_CACHE_NAME)
+            .then(cache => {
                 return fetch(e.request)
-            }
+                .then(response => {
+                    if (response.status === 200) {
+                        cache.put(e.request.url, response.clone());
+                    }
+                    return response;
+                })
+                .catch(err => {
+                    return cache.match(e.request);
+                });
+            })
+            .catch(err => console.log(err))
+        );
+
+        return;
+    }
+    e.respondWith(
+        fetch(e.request).catch(function() {
+            return caches.match(e.request).then(function(response) {
+                if (response) {
+                    return response;
+                } else if (e.request.headers.get('accept').includes('text/html')) {
+                    return caches.match('/');
+                }
+            });
         })
     );
 })

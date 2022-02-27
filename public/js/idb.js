@@ -1,7 +1,7 @@
 // variable that holds the db connection 
 let db;
 // connect to IndexedDB database called 'smart-money' and set it to version 1
-const request = indexedDB.open('smart-money', 1);
+const request = indexedDB.open('smart_money', 1);
 
 // this event will take place if the database version changes
 request.onupgradeneeded = function(event) {
