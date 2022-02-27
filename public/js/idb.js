@@ -1,9 +1,7 @@
-const { ServerResponse } = require("http");
-
 // variable that holds the db connection 
 let db;
-// connect to IndexedDB database called 'budget' and set it to version 1
-const request = indexedDB.open('budget', 1);
+// connect to IndexedDB database called 'smart-money' and set it to version 1
+const request = indexedDB.open('smart-money', 1);
 
 // this event will take place if the database version changes
 request.onupgradeneeded = function(event) {
@@ -28,13 +26,13 @@ request.onerror = function(event) {
 };
 
 // if a new transaction is submitted with no internet connection this function will execute
-function savePayment(payment) {
+function saveRecord(record) {
     const transaction = db.transaction(['new_budget_ticket'], 'readwrite');
 
     const budgetObjectStore = transaction.ObjectStore('new_budget_ticket');
 
     // add record to the object store
-    budgetObjectStore.add(payment);
+    budgetObjectStore.add(record);
 }
 
 function uploadBudgetTicket() {
