@@ -50,35 +50,16 @@ self.addEventListener('activate', function (e) {
 });
 
 self.addEventListener('fetch', function (e) {
-    if (e.request.url.includes('/api/')) {
-        e.respondWith(
-            caches.open(DATA_CACHE_NAME)
-            .then(cache => {
-                return fetch(e.request)
-                .then(response => {
-                    if (response.status === 200) {
-                        cache.put(e.request.url, response.clone());
-                    }
-                    return response;
-                })
-                .catch(err => {
-                    return cache.match(e.request);
-                });
-            })
-            .catch(err => console.log(err))
-        );
-
-        return;
-    }
+    console.log('fetch request : ' + e.request.url)
     e.respondWith(
-        fetch(e.request).catch(function() {
-            return caches.match(e.request).then(function(response) {
-                if (response) {
-                    return response;
-                } else if (e.request.headers.get('accept').includes('text/html')) {
-                    return caches.match('/');
-                }
-            });
+        caches.match(e.request).then(function (request) {
+            if (request) {
+                console.log('respond with cache : ' + e.request.url)
+                return request 
+            } else {
+                console.log('file is not cached, fetching : ' + e.request.url)
+                return fetch(e.request)
+            }
         })
     );
 })
