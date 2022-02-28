@@ -46,11 +46,11 @@ function uploadBudgetTicket() {
     // when successful with getAll() this function should be executed
     getAll.onsuccess = function() {
         if (getAll.result.length > 0) {
-            fetch('/api/transaction', {
+            fetch("/api/transaction", {
                 method: POST,
-                body: JSON.stringify(getAll.results),
+                body: JSON.stringify(getAll.result),
                 headers: {
-                    Accept: 'application/json, text/plaim, */*',
+                    Accept: 'application/json, text/plain, */*',
                     'Content-Type': 'application/json'
                 }
             })
@@ -59,7 +59,7 @@ function uploadBudgetTicket() {
                 if (serverResponse.message) {
                     throw new Error(serverResponse);
                 }
-                const transaction = db.transaction(['new_budget_ticket', 'readwrite']);
+                const transaction = db.transaction(['new_budget_ticket'], 'readwrite');
                 
                 const budgetObjectStore = transaction.objectStore('new_budget_ticket');
 
