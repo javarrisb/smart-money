@@ -1,4 +1,3 @@
-![screen smartm](https://user-images.githubusercontent.com/89273544/156093608-c9d8268e-f713-4b9c-96a5-cfe58a1106ba.png)
 # Smart-Money
 
 # Description
