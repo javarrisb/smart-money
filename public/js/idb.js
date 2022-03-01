@@ -29,7 +29,7 @@ request.onerror = function(event) {
 function saveRecord(record) {
     const transaction = db.transaction(['new_budget_ticket'], 'readwrite');
 
-    const budgetObjectStore = transaction.ObjectStore('new_budget_ticket');
+    const budgetObjectStore = transaction.objectStore('new_budget_ticket');
 
     // add record to the object store
     budgetObjectStore.add(record);
@@ -47,7 +47,7 @@ function uploadBudgetTicket() {
     getAll.onsuccess = function() {
         if (getAll.result.length > 0) {
             fetch("/api/transaction", {
-                method: POST,
+                method: "POST",
                 body: JSON.stringify(getAll.result),
                 headers: {
                     Accept: 'application/json, text/plain, */*',
